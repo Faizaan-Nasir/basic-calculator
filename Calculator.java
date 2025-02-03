@@ -91,21 +91,7 @@ public class Calculator extends Application{
         char op='+';
         for(int j=i;j<line.length();j++){
             if (checkOperator(line.charAt(j))){
-                if (op=='+'){
-                    result+=Double.parseDouble(num);
-                }
-                else if(op=='-'){
-                    result-=Double.parseDouble(num);
-                }
-                else if(op=='/'){
-                    result/=Double.parseDouble(num);
-                }
-                else if(op=='%'){
-                    result%=Double.parseDouble(num);
-                }
-                else if(op=='*'){
-                    result*=Double.parseDouble(num);
-                }
+                result=modifyResult(result,num,op);
                 op=line.charAt(j);
                 num="";
             }
@@ -113,6 +99,11 @@ public class Calculator extends Application{
                 num+=line.charAt(j);
             }            
         }
+        result=modifyResult(result,num,op);
+        
+        return result;
+    }
+    public static double modifyResult(double result,String num,char op){
         if (op=='+'){
             result+=Double.parseDouble(num);
         }
@@ -128,7 +119,6 @@ public class Calculator extends Application{
         else if(op=='*'){
             result*=Double.parseDouble(num);
         }
-        
         return result;
     }
 }
