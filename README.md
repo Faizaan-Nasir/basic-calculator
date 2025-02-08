@@ -1,5 +1,5 @@
 # Basic-Calculator 
-### An incredible simple Java Project made so I could explore Java and JavaFX for application development. 
+### An incredibly simple Java Project made so I could explore Java and JavaFX for application development. 
 ## Features
 Well it can add, subtract, multiple, divide and perform modulo operations in left to right precedence.
 ## Planned Features 🎯
