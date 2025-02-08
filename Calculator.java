@@ -5,6 +5,9 @@ import javafx.stage.Stage;
 import javafx.scene.layout.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import java.lang.Math;
+// import javafx.scene.input.KeyCode;
+
 public class Calculator extends Application{
     @Override
     public void start(Stage primaryStage) {
@@ -17,30 +20,41 @@ public class Calculator extends Application{
 
         GridPane grid=new GridPane();
         Button buttons[][];
-        buttons = new Button[4][4];
-        String [][] arr={{"1","2","3","+"},
+        buttons = new Button[5][4];
+        String [][] arr={
+        {"AC","del",".","^"},
+        {"1","2","3","+"},
         {"4","5","6","-"},
         {"7","8","9","/"},
         {"0","%","*","="}};
-        for(int i=0;i<4;i++){
+        for(int i=0;i<5;i++){
             for(int j=0;j<4;j++){
                 final int row = i;
                 final int col = j;
                 buttons[i][j]=new Button(arr[i][j]);
                 buttons[i][j].setMinWidth(55);
                 buttons[i][j].setMinHeight(55);
-                if (i==j && i==3){
-                    buttons[3][3].setOnAction(e->{
+                if (arr[i][j].equals("=")){
+                    buttons[i][j].setOnAction(e->{
                         label.setText(Double.toString(compute(label.getText())));
                     });
                 }
                 else{
                     buttons[i][j].setOnAction(e->{
-                        if (label.getText().equals("0")){
-                            label.setText(arr[row][col]);
-                        }
-                        else if(checkOperator(label.getText().charAt(label.getText().length()-1))&&checkOperator(arr[row][col].charAt(0))){
+                        if(checkOperator(label.getText().charAt(label.getText().length()-1))&&checkOperator(arr[row][col].charAt(0))){
                             label.setText(label.getText().substring(0,label.getText().length()-1)+arr[row][col]);
+                        }
+                        else if(arr[row][col].equals("AC")){
+                            label.setText("0");
+                        }
+                        else if(arr[row][col].equals("del") && label.getText().length()>1){
+                            label.setText(label.getText().substring(0,label.getText().length()-1));
+                        }
+                        else if(arr[row][col].equals("del")){
+                            label.setText("0");
+                        }
+                        else if (label.getText().equals("0")){
+                            label.setText(arr[row][col]);
                         }
                         else{
                             label.setText(label.getText()+arr[row][col]);
@@ -55,15 +69,34 @@ public class Calculator extends Application{
         grid.setVgap(5);
         root.getChildren().add(grid);
 
-
-        Scene scene = new Scene(root, 280, 400);
+        Scene scene = new Scene(root, 280, 450);
+        // scene.setOnKeyPressed(event->{
+        //     if(event.getCode()==KeyCode.ENTER){
+        //         event.consume();
+        //         buttons[4][3].fire();
+        //     }
+        // });
+        scene.setOnKeyTyped(event -> {
+            // System.out.println(event.getCharacter());
+            for(int i=0;i<5;i++){
+                // if(event.getCharacter().isBlank()||event.getCharacter().equals("\r")){
+                //     System.out.println("hello");
+                //     break;
+                // }
+                for(int j=0;j<4;j++){
+                    if(event.getCharacter().equals(arr[i][j])){
+                        buttons[i][j].fire();
+                    }
+                }
+            }
+        });
         scene.getStylesheets().add(getClass().getResource("./src/styles.css").toExternalForm());
         primaryStage.setTitle("Simple Calculator");
         primaryStage.setScene(scene);
         primaryStage.setMaxWidth(280);
-        primaryStage.setMaxHeight(400);
+        primaryStage.setMaxHeight(450);
         primaryStage.setMinWidth(280);
-        primaryStage.setMinHeight(400);
+        primaryStage.setMinHeight(450);
         primaryStage.show();
     }
     public static void main(String[] args) {
@@ -71,7 +104,7 @@ public class Calculator extends Application{
     }
 
     public static boolean checkOperator(char ch){
-        if (ch=='+'||ch=='-'||ch=='/'||ch=='%'||ch=='*'){
+        if (ch=='+'||ch=='-'||ch=='/'||ch=='%'||ch=='*'||ch=='^'){
             return true;
         }
         return false;
@@ -118,6 +151,9 @@ public class Calculator extends Application{
         }
         else if(op=='*'){
             result*=Double.parseDouble(num);
+        }
+        else if(op=='^'){
+            result=Math.pow(result,Double.parseDouble(num));
         }
         return result;
     }
